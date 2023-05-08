@@ -28,5 +28,17 @@ public class ProductController {
        return ResponseEntity.ok().body(this.productService.getAllProducts());
     }
 
+    @GetMapping("/getProduct/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable String productId){
+        return ResponseEntity.ok().body(this.productService.getProductById(productId));
+    }
+
+    @DeleteMapping("/deleteProduct/{productId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteProductById(@PathVariable String productId){
+        this.productService.deleteProductById(productId);
+    }
+
+
 
 }

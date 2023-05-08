@@ -48,7 +48,7 @@ public class ProductService {
     public void deleteProductById(String productId){
         Optional<Product> product = this.productRepository.findById(productId);
         if(product.isPresent()){
-            this.productRepository.deleteById(productId);
+            this.productRepository.delete(product.get());
         } else throw new CouldNotFoundException();
     }
 

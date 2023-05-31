@@ -40,6 +40,12 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
                 this.adjustMessages(e));
     }
 
+    @ExceptionHandler(CouldNotFoundProductException.class)
+    public ResponseEntity<?> couldNotFoundProductException(CouldNotFoundProductException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                this.adjustMessages(e));
+    }
+
     private Map<String, String> adjustMessages(RuntimeException exception){
         Map<String,String> errors = new HashMap<>();
         errors.put("msg",exception.getMessage());

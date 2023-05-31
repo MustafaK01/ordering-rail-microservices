@@ -2,16 +2,20 @@ package com.mustafak01.orderservice.service;
 
 import com.mustafak01.orderservice.dto.request.OrderLineItemsDto;
 import com.mustafak01.orderservice.dto.request.OrderRequest;
+import com.mustafak01.orderservice.dto.response.InventoryResponse;
 import com.mustafak01.orderservice.dto.response.OrderResponse;
 import com.mustafak01.orderservice.dto.response.converter.OrderLineItemsDtoConverter;
 import com.mustafak01.orderservice.exception.CouldNotFoundException;
+import com.mustafak01.orderservice.exception.CouldNotFoundProductException;
 import com.mustafak01.orderservice.model.Order;
 import com.mustafak01.orderservice.model.OrderLineItems;
 import com.mustafak01.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +28,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderLineItemsDtoConverter orderLineItemsDtoConverter;
+    private final WebClient webClient;
 
 
     public void saveOrder(OrderRequest orderRequest){
@@ -34,7 +39,11 @@ public class OrderService {
                     = orderRequest.getOrderLineItemsDto().stream()
                     .map(this::mapToDto).toList();
             order.setOrderLineItems(orderLineItems);
-            this.orderRepository.save(order);
+
+            //check product if in inventory service. And save it if in stock.
+            if(this.checkProductsIfInStockSync(order)){
+                this.orderRepository.save(order);
+            }else throw new CouldNotFoundProductException();
         }
     }
 
@@ -71,6 +80,17 @@ public class OrderService {
                         .mapOrderLineItemsToList(o.getOrderLineItems()))
                 .orderNumber(o.getOrderNumber())
                 .build();
+    }
+
+    private boolean checkProductsIfInStockSync(Order order){
+        List<String> codes = order.getOrderLineItems().stream().map(OrderLineItems::getCode).toList();
+        InventoryResponse[] inventoryResponses = webClient.get().uri("http://localhost:8082/api/inventory/isInStock"
+                        ,uriBuilder -> uriBuilder.queryParam("code",codes).build())
+                .retrieve().bodyToMono(InventoryResponse[].class)
+                .block();
+        if(inventoryResponses!=null){
+            return Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
+        }else return false;
     }
 
 

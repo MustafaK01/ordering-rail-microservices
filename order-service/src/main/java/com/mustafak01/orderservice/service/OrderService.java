@@ -84,7 +84,7 @@ public class OrderService {
 
     private boolean checkProductsIfInStockSync(Order order){
         List<String> codes = order.getOrderLineItems().stream().map(OrderLineItems::getCode).toList();
-        InventoryResponse[] inventoryResponses = webClient.get().uri("http://localhost:8082/api/inventory/isInStock"
+        InventoryResponse[] inventoryResponses = webClient.get().uri("http://inventory-service/api/inventory/isInStock"
                         ,uriBuilder -> uriBuilder.queryParam("code",codes).build())
                 .retrieve().bodyToMono(InventoryResponse[].class)
                 .block();

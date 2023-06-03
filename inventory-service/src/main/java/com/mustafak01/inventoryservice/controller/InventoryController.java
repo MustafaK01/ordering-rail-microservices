@@ -2,6 +2,7 @@ package com.mustafak01.inventoryservice.controller;
 
 import com.mustafak01.inventoryservice.dto.InventoryAddProductRequest;
 import com.mustafak01.inventoryservice.dto.InventoryAddProductResponse;
+import com.mustafak01.inventoryservice.dto.InventoryProductRequest;
 import com.mustafak01.inventoryservice.dto.InventoryStockResponse;
 import com.mustafak01.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,12 @@ public class InventoryController {
     @PostMapping("/addProductToInventory")
     public InventoryAddProductResponse addProductToInventory(@RequestBody InventoryAddProductRequest inventoryAddProductRequest){
         return this.inventoryService.addProductToInventory(inventoryAddProductRequest);
+    }
+
+    @PutMapping("/setQuantity")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateQuantityOfProduct(@RequestBody InventoryProductRequest inventoryProductDto){
+        inventoryService.updateQuantityOfProduct(inventoryProductDto);
     }
 
 

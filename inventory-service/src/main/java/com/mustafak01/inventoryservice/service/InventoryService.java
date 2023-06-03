@@ -2,8 +2,10 @@ package com.mustafak01.inventoryservice.service;
 
 import com.mustafak01.inventoryservice.dto.InventoryAddProductRequest;
 import com.mustafak01.inventoryservice.dto.InventoryAddProductResponse;
+import com.mustafak01.inventoryservice.dto.InventoryProductRequest;
 import com.mustafak01.inventoryservice.dto.InventoryStockResponse;
 import com.mustafak01.inventoryservice.exception.CouldNotCreateException;
+import com.mustafak01.inventoryservice.exception.CouldNotFoundException;
 import com.mustafak01.inventoryservice.model.Inventory;
 import com.mustafak01.inventoryservice.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +45,18 @@ public class InventoryService {
         }
         else throw new CouldNotCreateException("Product couldn't add in inventory");
     }
+
+    public void updateQuantityOfProduct(InventoryProductRequest inventoryProductDto){
+        if(inventoryProductDto!=null){
+            Optional<Inventory> productInInventory = this.inventoryRepository.findByCode(inventoryProductDto.getCode());
+            if(productInInventory.isPresent()){
+                productInInventory.get().setQuantity(inventoryProductDto.getQuantity());
+                this.inventoryRepository.save(productInInventory.get());
+            }else throw new CouldNotFoundException();
+        }else throw new CouldNotCreateException("Missing data");
+
+    }
+
 
 
 }

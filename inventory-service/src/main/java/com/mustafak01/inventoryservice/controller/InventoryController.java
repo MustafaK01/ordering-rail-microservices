@@ -1,6 +1,8 @@
 package com.mustafak01.inventoryservice.controller;
 
-import com.mustafak01.inventoryservice.dto.InventoryResponse;
+import com.mustafak01.inventoryservice.dto.InventoryAddProductRequest;
+import com.mustafak01.inventoryservice.dto.InventoryAddProductResponse;
+import com.mustafak01.inventoryservice.dto.InventoryStockResponse;
 import com.mustafak01.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +19,14 @@ public class InventoryController {
 
     @GetMapping("/isInStock")
     @ResponseStatus(HttpStatus.OK)
-    public List<InventoryResponse> isInStock(@RequestParam List<String> code){
+    public List<InventoryStockResponse> isInStock(@RequestParam List<String> code){
         return inventoryService.isInStock(code);
     }
+
+    @PostMapping("/addProductToInventory")
+    public InventoryAddProductResponse addProductToInventory(@RequestBody InventoryAddProductRequest inventoryAddProductRequest){
+        return this.inventoryService.addProductToInventory(inventoryAddProductRequest);
+    }
+
 
 }

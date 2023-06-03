@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InventoryResponse {
+public class InventoryAddProductResponse {
 
-    private String code;
-    private boolean isInStock;
+    private boolean isAddedToInventory;
+    private Integer quantity;
 
 }

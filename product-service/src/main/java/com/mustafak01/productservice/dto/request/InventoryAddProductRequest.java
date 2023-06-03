@@ -4,21 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
-
-import java.math.BigDecimal;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductRequest {
+@Builder
+public class InventoryAddProductRequest {
 
-    private String name;
-    private String description;
-    private BigDecimal price;
-
-    @Nullable
+    private String code;
     private Integer quantity;
 
 }

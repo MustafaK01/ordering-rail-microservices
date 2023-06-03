@@ -1,6 +1,7 @@
 package com.mustafak01.productservice.controller;
 
 import com.mustafak01.productservice.dto.request.CreateProductRequest;
+import com.mustafak01.productservice.dto.response.ProductInventoryResponse;
 import com.mustafak01.productservice.dto.response.ProductResponse;
 import com.mustafak01.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class ProductController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody CreateProductRequest productCreateInput){
-        this.productService.createProduct(productCreateInput);
+    public ProductInventoryResponse createProduct(@RequestBody CreateProductRequest productCreateInput){
+        return this.productService.createProduct(productCreateInput);
     }
 
     @GetMapping("/getAll")

@@ -28,7 +28,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderLineItemsDtoConverter orderLineItemsDtoConverter;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
 
     public void saveOrder(OrderRequest orderRequest){
@@ -84,7 +84,7 @@ public class OrderService {
 
     private boolean checkProductsIfInStockSync(Order order){
         List<String> codes = order.getOrderLineItems().stream().map(OrderLineItems::getCode).toList();
-        InventoryResponse[] inventoryResponses = webClient.get().uri("http://inventory-service/api/inventory/isInStock"
+        InventoryResponse[] inventoryResponses = webClientBuilder.build().get().uri("http://inventory-service/api/inventory/isInStock"
                         ,uriBuilder -> uriBuilder.queryParam("code",codes).build())
                 .retrieve().bodyToMono(InventoryResponse[].class)
                 .block();

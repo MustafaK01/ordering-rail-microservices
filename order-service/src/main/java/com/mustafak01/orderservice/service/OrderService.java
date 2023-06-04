@@ -26,6 +26,10 @@ import java.util.*;
 @Transactional
 public class OrderService {
 
+    // TODO: 5.06.2023
+    // If new quantity is 0, delete item from orderLine
+    // Change quantity of product in inventory when quantity in orderLine is changed
+    // and when added order (as orders add or removes from orderLine).
 
     private final OrderRepository orderRepository;
     private final OrderLineItemsDtoConverter orderLineItemsDtoConverter;
@@ -66,9 +70,6 @@ public class OrderService {
         } else throw new CouldNotFoundException();
     }
 
-    // TODO: 5.06.2023
-    //If new quantity is 0, delete item from orderLine
-    //Change quantity data in inventory when quantity in orderLine is changed (as orders add or removes from orderLine).
     public OrderLineItemUpdateQuantityResponse updateQuantityOfProductInOrderLine(UpdateQuantityOfProductInOrderLine updateReq){
         Optional<Order> order = this.orderRepository.findOrderByOrderNumber(updateReq.getOrderNumber());
         Integer quantityOfProduct = this.checkProductIfInStock(updateReq.getProductCode()).getQuantity();

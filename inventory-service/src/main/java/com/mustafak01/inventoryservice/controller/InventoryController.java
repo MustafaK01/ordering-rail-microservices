@@ -1,9 +1,6 @@
 package com.mustafak01.inventoryservice.controller;
 
-import com.mustafak01.inventoryservice.dto.InventoryAddProductRequest;
-import com.mustafak01.inventoryservice.dto.InventoryAddProductResponse;
-import com.mustafak01.inventoryservice.dto.InventoryProductRequest;
-import com.mustafak01.inventoryservice.dto.InventoryStockResponse;
+import com.mustafak01.inventoryservice.dto.*;
 import com.mustafak01.inventoryservice.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +30,12 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateQuantityOfProduct(@RequestBody InventoryProductRequest inventoryProductDto){
         inventoryService.updateQuantityOfProduct(inventoryProductDto);
+    }
+
+    @GetMapping("/getQuantity")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public InventoryQuantityResponse getQuantityOfProduct(@RequestParam String code){
+        return inventoryService.getQuantityOfProduct(code);
     }
 
 

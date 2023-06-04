@@ -1,9 +1,6 @@
 package com.mustafak01.inventoryservice.service;
 
-import com.mustafak01.inventoryservice.dto.InventoryAddProductRequest;
-import com.mustafak01.inventoryservice.dto.InventoryAddProductResponse;
-import com.mustafak01.inventoryservice.dto.InventoryProductRequest;
-import com.mustafak01.inventoryservice.dto.InventoryStockResponse;
+import com.mustafak01.inventoryservice.dto.*;
 import com.mustafak01.inventoryservice.exception.CouldNotCreateException;
 import com.mustafak01.inventoryservice.exception.CouldNotFoundException;
 import com.mustafak01.inventoryservice.model.Inventory;
@@ -31,6 +28,17 @@ public class InventoryService {
                     InventoryStockResponse.builder().code(inventory.getCode())
                             .isInStock(inventory.getQuantity()>0).build()
                 ).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public InventoryQuantityResponse getQuantityOfProduct(String code){
+        Optional<Inventory> inventory = inventoryRepository.findByCode(code);
+        if(inventory.isPresent()){
+            return InventoryQuantityResponse.builder()
+                    .code(inventory.get().getCode())
+                    .quantity(inventory.get().getQuantity())
+                    .build();
+        } else throw new CouldNotFoundException();
     }
 
     public InventoryAddProductResponse addProductToInventory(InventoryAddProductRequest inventoryAddProductRequest){

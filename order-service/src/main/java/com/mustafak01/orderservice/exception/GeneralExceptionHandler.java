@@ -46,6 +46,12 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
                 this.adjustMessages(e));
     }
 
+    @ExceptionHandler(CouldNotUpdateException.class)
+    public ResponseEntity<?> couldNotUpdateException(CouldNotUpdateException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                this.adjustMessages(e));
+    }
+
     private Map<String, String> adjustMessages(RuntimeException exception){
         Map<String,String> errors = new HashMap<>();
         errors.put("msg",exception.getMessage());
